@@ -1,0 +1,94 @@
+package com.MarketAnalysis.MA
+
+import org.apache.spark.sql.functions.{avg, col, monotonically_increasing_id}
+import org.apache.spark.sql.{DataFrame, SparkSession, functions}
+import org.apache.spark.sql.types.{IntegerType, StringType, StructType}
+
+object Demo extends Serializable {
+  def main(args: Array[String]): Unit = {
+    val spark = SparkSession.builder()
+      .appName("Master Analysis")
+      .master("local[1]")
+      .config("spark.cassandra.connection.host", "localhost")
+      .config("spark.cassandra.connection.port", "9042")
+      .config("spark.sql.extensions", "com.datastax.spark.connector.CassandraSparkExtensions")
+      .config("spark.sql.catalog.lh", "com.datastax.spark.connector.datasource.CassandraCatalog")
+      .getOrCreate()
+    val df = spark.read.option("header", true).csv(path = "data/Market_Analysis.csv")
+    val df1 = df.select(functions.split(col("age;\"job\";\"marital\";\"education\";\"default\";\"balance\";\"housing\";\"loan\";\"contact\";\"day\";\"month\";\"duration\";\"campaign\";\"pdays\";\"previous\";\"poutcome\";\"y\""), ";").getItem(0).as("age"),
+      functions.split(col("age;\"job\";\"marital\";\"education\";\"default\";\"balance\";\"housing\";\"loan\";\"contact\";\"day\";\"month\";\"duration\";\"campaign\";\"pdays\";\"previous\";\"poutcome\";\"y\""), ";").getItem(1).as("job"),
+      functions.split(col("age;\"job\";\"marital\";\"education\";\"default\";\"balance\";\"housing\";\"loan\";\"contact\";\"day\";\"month\";\"duration\";\"campaign\";\"pdays\";\"previous\";\"poutcome\";\"y\""), ";").getItem(2).as("marital"),
+      functions.split(col("age;\"job\";\"marital\";\"education\";\"default\";\"balance\";\"housing\";\"loan\";\"contact\";\"day\";\"month\";\"duration\";\"campaign\";\"pdays\";\"previous\";\"poutcome\";\"y\""), ";").getItem(3).as("education"),
+      functions.split(col("age;\"job\";\"marital\";\"education\";\"default\";\"balance\";\"housing\";\"loan\";\"contact\";\"day\";\"month\";\"duration\";\"campaign\";\"pdays\";\"previous\";\"poutcome\";\"y\""), ";").getItem(4).as("default"),
+      functions.split(col("age;\"job\";\"marital\";\"education\";\"default\";\"balance\";\"housing\";\"loan\";\"contact\";\"day\";\"month\";\"duration\";\"campaign\";\"pdays\";\"previous\";\"poutcome\";\"y\""), ";").getItem(5).as("balance"),
+      functions.split(col("age;\"job\";\"marital\";\"education\";\"default\";\"balance\";\"housing\";\"loan\";\"contact\";\"day\";\"month\";\"duration\";\"campaign\";\"pdays\";\"previous\";\"poutcome\";\"y\""), ";").getItem(6).as("housing"),
+      functions.split(col("age;\"job\";\"marital\";\"education\";\"default\";\"balance\";\"housing\";\"loan\";\"contact\";\"day\";\"month\";\"duration\";\"campaign\";\"pdays\";\"previous\";\"poutcome\";\"y\""), ";").getItem(7).as("loan"),
+      functions.split(col("age;\"job\";\"marital\";\"education\";\"default\";\"balance\";\"housing\";\"loan\";\"contact\";\"day\";\"month\";\"duration\";\"campaign\";\"pdays\";\"previous\";\"poutcome\";\"y\""), ";").getItem(8).as("contact"),
+      functions.split(col("age;\"job\";\"marital\";\"education\";\"default\";\"balance\";\"housing\";\"loan\";\"contact\";\"day\";\"month\";\"duration\";\"campaign\";\"pdays\";\"previous\";\"poutcome\";\"y\""), ";").getItem(9).as("day"),
+      functions.split(col("age;\"job\";\"marital\";\"education\";\"default\";\"balance\";\"housing\";\"loan\";\"contact\";\"day\";\"month\";\"duration\";\"campaign\";\"pdays\";\"previous\";\"poutcome\";\"y\""), ";").getItem(10).as("month"),
+      functions.split(col("age;\"job\";\"marital\";\"education\";\"default\";\"balance\";\"housing\";\"loan\";\"contact\";\"day\";\"month\";\"duration\";\"campaign\";\"pdays\";\"previous\";\"poutcome\";\"y\""), ";").getItem(11).as("duration"),
+      functions.split(col("age;\"job\";\"marital\";\"education\";\"default\";\"balance\";\"housing\";\"loan\";\"contact\";\"day\";\"month\";\"duration\";\"campaign\";\"pdays\";\"previous\";\"poutcome\";\"y\""), ";").getItem(12).as("campaign"),
+      functions.split(col("age;\"job\";\"marital\";\"education\";\"default\";\"balance\";\"housing\";\"loan\";\"contact\";\"day\";\"month\";\"duration\";\"campaign\";\"pdays\";\"previous\";\"poutcome\";\"y\""), ";").getItem(13).as("pdays"),
+      functions.split(col("age;\"job\";\"marital\";\"education\";\"default\";\"balance\";\"housing\";\"loan\";\"contact\";\"day\";\"month\";\"duration\";\"campaign\";\"pdays\";\"previous\";\"poutcome\";\"y\""), ";").getItem(14).as("previous"),
+      functions.split(col("age;\"job\";\"marital\";\"education\";\"default\";\"balance\";\"housing\";\"loan\";\"contact\";\"day\";\"month\";\"duration\";\"campaign\";\"pdays\";\"previous\";\"poutcome\";\"y\""), ";").getItem(15).as("poutcome"),
+      functions.split(col("age;\"job\";\"marital\";\"education\";\"default\";\"balance\";\"housing\";\"loan\";\"contact\";\"day\";\"month\";\"duration\";\"campaign\";\"pdays\";\"previous\";\"poutcome\";\"y\""), ";").getItem(16).as("y"))
+
+      .drop("age;\"job\";\"marital\";\"education\";\"default\";\"balance\";\"housing\";\"loan\";\"contact\";\"day\";\"month\";\"duration\";\"campaign\";\"pdays\";\"previous\";\"poutcome\";\"y\"")
+    df1.printSchema()
+    df1.show(false)
+    df1.withColumn("age", col("age").cast("int"))
+    df1.withColumn("balance", col("balance").cast("int"))
+    df1.withColumn("day", col("day").cast("int"))
+    df1.withColumn("duration", col("duration").cast("int"))
+    df1.withColumn("campaign", col("campaign").cast("int"))
+    df1.withColumn("pdays", col("pdays").cast("int"))
+    df1.withColumn("previous", col("previous").cast("int"))
+
+    df1.printSchema()
+    df1.createTempView("bank")
+
+    val success = spark.sql("select (subscribed/total)*100 as marketing_success_rate from (select count(*) as subscribed from bank where y = '\"yes\"') , (select count (*) as total from bank)").show()
+    val failure = spark.sql("select (not_subscribed/total)*100 as marketing_failure_rate from (select count(*) as not_subscribed from bank where y = '\"no\"') , (select count (*) as total from bank)").show()
+
+    df1.select(functions.max("age")).show()
+    df1.select(functions.min("age")).show()
+    df1.select(avg("age")).show()
+
+    df1.select(avg("balance")).show()
+
+    val median = spark.sql("select percentile_approx(balance, 0.5) from bank").show()
+
+    val age = spark.sql("select age, count(*) as number from bank where y='\"yes\"' group by age order by number desc").show()
+    val marital = spark.sql("select marital, count(*) as number from bank where y='\"yes\"' group by marital order by number desc").show()
+
+    val age_marital = spark.sql("select age,marital, count(*) as number from bank where y='\"yes\"' group by age,marital order by number desc").show()
+
+
+    val agedf = spark.udf.register("agedf", (age: Int) => {
+      if (age < 20)
+        "Teen"
+      else if (age > 20 && age <= 32)
+        "Young"
+      else if (age > 33 && age <= 55)
+        "Middle Aged"
+      else
+        "Old"
+    })
+    val newage = df1.withColumn("age", agedf(df1("age")))
+    newage.createTempView("newbank")
+
+    val age_target_yes = spark.sql("select age, count(*) as number from newbank where y='\"yes\"' group by age order by number desc ").show()
+    val age_target_no = spark.sql("select age, count(*) as number from newbank where y='\"no\"' group by age order by number desc ").show()
+
+    val dataFrame = newage.withColumn("incremental_id", monotonically_increasing_id())
+    val visual = dataFrame.select(col("incremental_id"), col("age"), col("y"))
+    visual.show()
+
+    /*visual.write
+      .format("org.apache.spark.sql.cassandra")
+      .option("keyspace", "poc")
+      .option("table", "ma")
+      .mode("append")
+      .save()*/
+  }
+}
